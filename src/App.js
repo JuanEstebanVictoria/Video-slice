@@ -1,5 +1,5 @@
 // src/App.js
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import VideoPlayer from './components/VideosPlayer';
 import ClipForm from './components/ClipForm';
 import ClipList from './components/ClipList';
@@ -11,6 +11,19 @@ function App() {
     const [clips, setClips] = useState([
         { name: "Video completo", start: 0, end: 52 }
     ]);
+    useEffect(() => {
+        const savedClips = localStorage.getItem('clips');
+        if (savedClips) {
+            const parsed = JSON.parse(savedClips);
+            setClips(parsed);
+            setSelectedClip(parsed[0]);
+        }
+    },[]);
+
+    useEffect(() => {
+        localStorage.setItem('clips', JSON.stringify(clips));
+    }, [clips]);
+
     const [selectedClip, setSelectedClip] = useState(clips[0]);
 
     const handleAddClip = (clip) => {
@@ -33,6 +46,12 @@ function App() {
             setSelectedClip(updateClip);
         }
     };
+    const handleResetClips= ()=>{
+        localStorage.removeItem('clips');
+        const fullVideo = { name: "Video completo", start: 0, end: 52 };
+        setClips([fullVideo]);
+        setSelectedClip(fullVideo);
+    }
 
     return (
         <div className="App">
@@ -42,6 +61,9 @@ function App() {
                 videoUrl={VIDEO_URL}
                 start={selectedClip.start}
                 end={selectedClip.end}
+                clips={clips}
+                selectedClip={selectedClip}
+                onSelect={setSelectedClip}
             />
 
             <ClipList
@@ -50,6 +72,7 @@ function App() {
                 onDelete={handleDeleteClip}
                 onEdit={handleEditClip}
             />
+            <button onClick={handleResetClips}>Reset</button>
 
             <ClipForm onAddClip={handleAddClip} />
         </div>
