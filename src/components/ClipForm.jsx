@@ -24,26 +24,26 @@ const ClipForm = ({ onAddClip }) => {
 
     return (
         <form onSubmit={handleSubmit}>
-            <h3>Agregar nuevo clip</h3>
+            <h3>Add a new clip</h3>
             <input
                 type="text"
-                placeholder="Nombre del clip"
+                placeholder="Name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
             />
             <input
                 type="number"
-                placeholder="Inicio (segundos)"
+                placeholder="Start (seconds)"
                 value={start}
                 onChange={(e) => setStart(e.target.value)}
             />
             <input
                 type="number"
-                placeholder="Fin (segundos)"
+                placeholder="End (seconds)"
                 value={end}
                 onChange={(e) => setEnd(e.target.value)}
             />
-            <button type="submit">Agregar</button>
+            <button type="submit">Add</button>
         </form>
     );
 };

@@ -1,7 +1,7 @@
 // src/components/VideoPlayer.jsx
 import React, { useRef, useEffect } from 'react';
 
-const VideoPlayer = ({ videoUrl, start, end, clips,selectedClip, onSelect }) => {
+const VideoPlayer = ({ videoUrl, start, end, clips,selectedClip, onSelect, isLoadingNextClip, setIsLoadingNextClip }) => {
     const videoRef = useRef(null);
 
     useEffect(() => {
@@ -21,8 +21,10 @@ const VideoPlayer = ({ videoUrl, start, end, clips,selectedClip, onSelect }) => 
                 const nextClip = clips[currentIndex + 1];
 
                 if (nextClip) {
+                    setIsLoadingNextClip(true);
                     setTimeout(() => {
                         onSelect(nextClip);
+                        setIsLoadingNextClip(false);
                     }, 3000);
                 }
             }
@@ -33,15 +35,25 @@ const VideoPlayer = ({ videoUrl, start, end, clips,selectedClip, onSelect }) => 
         return () => {
             video.removeEventListener('timeupdate', handleTimeUpdate);
         };
-    }, [start, end, clips, selectedClip, onSelect]);
+    }, [start, end, clips, selectedClip, onSelect, setIsLoadingNextClip]);
 
     return (
-        <video
-            ref={videoRef}
-            src={videoUrl}
-            controls
-            width="640"
-        />
+        <div>
+            {isLoadingNextClip && (
+                <div style={{ textAlign: 'center' }}>
+                    <div className="loader"></div>
+                    <p>Next clip in 3 sec...</p>
+                </div>
+            )}
+
+            <video
+                ref={videoRef}
+                src={videoUrl}
+                controls
+                width="640"
+                style={{ opacity: isLoadingNextClip ? 0.3 : 1 }}
+            />
+        </div>
     );
 };
 

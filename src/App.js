@@ -9,7 +9,7 @@ const VIDEO_URL = "https://download.blender.org/durian/trailer/sintel_trailer-48
 
 function App() {
     const [clips, setClips] = useState([
-        { name: "Video completo", start: 0, end: 52 }
+        { name: "Full video", start: 0, end: 52 }
     ]);
     useEffect(() => {
         const savedClips = localStorage.getItem('clips');
@@ -48,14 +48,17 @@ function App() {
     };
     const handleResetClips= ()=>{
         localStorage.removeItem('clips');
-        const fullVideo = { name: "Video completo", start: 0, end: 52 };
+        const fullVideo = { name: "Full video", start: 0, end: 52 };
         setClips([fullVideo]);
         setSelectedClip(fullVideo);
     }
 
+    const [isLoadingNextClip, setIsLoadingNextClip] = useState(false);
+
+
     return (
         <div className="App">
-            <h1>Editor de Clips</h1>
+            <h1>Video slicer</h1>
 
             <VideoPlayer
                 videoUrl={VIDEO_URL}
@@ -64,6 +67,8 @@ function App() {
                 clips={clips}
                 selectedClip={selectedClip}
                 onSelect={setSelectedClip}
+                isLoadingNextClip={isLoadingNextClip}
+                setIsLoadingNextClip={setIsLoadingNextClip}
             />
 
             <ClipList
