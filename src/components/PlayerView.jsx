@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import VideoPlayer from './components/VideoPlayer';
-import ClipList from './components/ClipList';
+import VideoPlayer from './VideosPlayer';
+import ClipList from './ClipList';
+
 
 const PlayerView = () => {
     const [clips, setClips] = useState([]);
@@ -19,7 +20,7 @@ const PlayerView = () => {
 
     return (
         <div className="App">
-            <h1>Ver Clips</h1>
+            <h1>Watch clips</h1>
             <VideoPlayer
                 videoUrl="https://download.blender.org/durian/trailer/sintel_trailer-480p.mp4"
                 start={selectedClip.start}

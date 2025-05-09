@@ -4,6 +4,8 @@ import VideoPlayer from './components/VideosPlayer';
 import ClipForm from './components/ClipForm';
 import ClipList from './components/ClipList';
 import './App.css';
+import { useNavigate } from 'react-router-dom';
+
 
 const VIDEO_URL = "https://download.blender.org/durian/trailer/sintel_trailer-480p.mp4";
 
@@ -24,6 +26,7 @@ function App() {
         localStorage.setItem('clips', JSON.stringify(clips));
     }, [clips]);
 
+    const navigate = useNavigate();
 
 
     const [selectedClip, setSelectedClip] = useState(clips[0]);
@@ -118,6 +121,9 @@ function App() {
                 editable={true}
             />
             <button onClick={handleResetClips}>Reset</button>
+            <button className="footer-button" onClick={() => navigate('/player')} style={{ marginTop: '2rem' }}>
+                Only clips and video
+            </button>
 
             <ClipForm onAddClip={handleAddClip} />
         </div>
