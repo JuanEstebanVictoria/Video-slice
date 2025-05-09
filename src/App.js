@@ -24,6 +24,8 @@ function App() {
         localStorage.setItem('clips', JSON.stringify(clips));
     }, [clips]);
 
+
+
     const [selectedClip, setSelectedClip] = useState(clips[0]);
 
     const handleAddClip = (clip) => {
@@ -54,6 +56,35 @@ function App() {
     }
 
     const [isLoadingNextClip, setIsLoadingNextClip] = useState(false);
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (isLoadingNextClip) return;
+
+            const index = clips.findIndex(
+                (c) => c.start === selectedClip.start && c.end === selectedClip.end
+            );
+
+            if (e.key === 'ArrowRight' && index < clips.length - 1) {
+                setSelectedClip(clips[index + 1]);
+            }
+
+            if (e.key === 'ArrowLeft' && index > 0) {
+                setSelectedClip(clips[index - 1]);
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [clips, selectedClip, isLoadingNextClip]);
+
+    const [tagFilter, setTagFilter] = useState('');
+
+
+    const filteredClips = tagFilter
+        ? clips.filter(clip => clip.tags?.includes(tagFilter))
+        : clips;
+
+
 
 
     return (
@@ -70,12 +101,21 @@ function App() {
                 isLoadingNextClip={isLoadingNextClip}
                 setIsLoadingNextClip={setIsLoadingNextClip}
             />
+            <input
+                type="text"
+                placeholder="Filtrar por tag..."
+                value={tagFilter}
+                onChange={(e) => setTagFilter(e.target.value.toLowerCase())}
+                style={{ marginBottom: '1rem', padding: '0.5rem', width: '100%' }}
+            />
+
 
             <ClipList
-                clips={clips}
+                clips={filteredClips}
                 onSelect={setSelectedClip}
                 onDelete={handleDeleteClip}
                 onEdit={handleEditClip}
+                editable={true}
             />
             <button onClick={handleResetClips}>Reset</button>
 

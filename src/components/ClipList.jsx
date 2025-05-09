@@ -1,7 +1,7 @@
 // src/components/ClipList.jsx
 import React from 'react';
 
-const ClipList = ({ clips, onSelect, onDelete, onEdit }) => {
+const ClipList = ({ clips, onSelect, onDelete, onEdit, editable = true }) => {
     return (
         <div>
             <h3>Saved clips</h3>
@@ -11,8 +11,11 @@ const ClipList = ({ clips, onSelect, onDelete, onEdit }) => {
                         <strong onClick={() => onSelect(clip)} style={{ cursor: 'pointer' }}>
                             {clip.name} ({clip.start}s - {clip.end}s)
                         </strong>
+                        <p style={{ fontSize: '0.9rem', color: '#777' }}>
+                            Tags: {clip.tags?.join(', ') || "None"}
+                        </p>
 
-                        {index !== 0 && (
+                        {editable && index !== 0 && (
                             <>
                                 <button
                                     style={{ marginLeft: '10px' }}
@@ -27,12 +30,14 @@ const ClipList = ({ clips, onSelect, onDelete, onEdit }) => {
                                         const newName = prompt("New name:", clip.name);
                                         const newStart = prompt("New start:", clip.start);
                                         const newEnd = prompt("New end:", clip.end);
+                                        const newTags = prompt("New tags:", clip.tags?.join(', ')||'' );
 
                                         if (newName && newStart !== null && newEnd !== null) {
                                             const updated = {
                                                 name: newName,
                                                 start: parseFloat(newStart),
                                                 end: parseFloat(newEnd),
+                                                tags: newTags.split(',').map(t => t.trim().toLowerCase())
                                             };
                                             onEdit(index, updated);
                                         }

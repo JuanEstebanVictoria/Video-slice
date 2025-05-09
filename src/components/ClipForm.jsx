@@ -14,6 +14,7 @@ const ClipForm = ({ onAddClip }) => {
             name,
             start: parseFloat(start),
             end: parseFloat(end),
+            tags: tags.split(',').map(t => t.trim().toLowerCase())
         };
 
         onAddClip(clip);
@@ -21,6 +22,7 @@ const ClipForm = ({ onAddClip }) => {
         setStart('');
         setEnd('');
     };
+    const [tags, setTags] = useState('');
 
     return (
         <form onSubmit={handleSubmit}>
@@ -43,6 +45,13 @@ const ClipForm = ({ onAddClip }) => {
                 value={end}
                 onChange={(e) => setEnd(e.target.value)}
             />
+            <input
+                type="text"
+                placeholder="Tag"
+                value={tags}
+                onChange={(e)=> setTags(e.target.value)}
+            />
+
             <button type="submit">Add</button>
         </form>
     );
