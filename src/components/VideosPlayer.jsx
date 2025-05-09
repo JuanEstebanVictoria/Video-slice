@@ -1,23 +1,39 @@
 // src/components/VideoPlayer.jsx
-import React, {useRef, useEffect, useState} from 'react';
 
-const VideoPlayer = ({ videoUrl, start, end, clips,selectedClip, onSelect, isLoadingNextClip, setIsLoadingNextClip }) => {
-    const videoRef = useRef(null);
-    const [duration, setDuration] = useState(0);
+// Import React and hooks for working with DOM and component state
+import React, { useRef, useEffect, useState } from 'react';
+
+// VideoPlayer component responsible for playing a video (or a selected clip of it)
+// Props:
+// - videoUrl: source URL of the video
+// - start, end: clip boundaries (in seconds)
+// - clips: list of all clips
+// - selectedClip: currently active clip to play
+// - onSelect: function to select a new clip
+// - isLoadingNextClip, setIsLoadingNextClip: state and handler for loading animation during auto-jump
+const VideoPlayer = ({
+                         videoUrl,
+                         start,
+                         end,
+                         clips,
+                         selectedClip,
+                         onSelect,
+                         isLoadingNextClip,
+                         setIsLoadingNextClip
+                     }) => {
+    const videoRef = useRef(null); // Reference to the HTML5 video element
+    const [duration, setDuration] = useState(0); // Full video duration
     const isFullVideo = selectedClip.start === 0 && selectedClip.end >= duration - 0.5;
-
-
-
 
     useEffect(() => {
         const video = videoRef.current;
         if (!video) return;
 
-        // Setear el tiempo inicial y reproducir
+        // Set the video to start from the specified start time
         video.currentTime = start;
         video.play();
 
-        // Capturar duración cuando esté disponible
+        // When metadata is loaded, capture video duration
         const handleLoadedMetadata = () => {
             setDuration(video.duration);
         };
@@ -25,7 +41,7 @@ const VideoPlayer = ({ videoUrl, start, end, clips,selectedClip, onSelect, isLoa
             setDuration(video.duration);
         });
 
-        // Lógica para salto automático al siguiente clip
+        // Check current playback time and auto-jump to the next clip when it ends
         const handleTimeUpdate = () => {
             if (video.currentTime >= end) {
                 video.pause();
@@ -36,6 +52,7 @@ const VideoPlayer = ({ videoUrl, start, end, clips,selectedClip, onSelect, isLoa
                 );
                 const nextClip = clips[currentIndex + 1];
 
+                // Auto-play next clip after 3 seconds with loading animation
                 if (nextClip) {
                     setIsLoadingNextClip(true);
                     setTimeout(() => {
@@ -48,16 +65,16 @@ const VideoPlayer = ({ videoUrl, start, end, clips,selectedClip, onSelect, isLoa
 
         video.addEventListener('timeupdate', handleTimeUpdate);
 
-        // Limpieza
+        // Clean up event listeners on unmount or dependency change
         return () => {
             video.removeEventListener('timeupdate', handleTimeUpdate);
             video.removeEventListener('loadedmetadata', handleLoadedMetadata);
         };
     }, [start, end, clips, selectedClip, onSelect, setIsLoadingNextClip]);
 
-
     return (
         <div style={{ position: 'relative' }}>
+            {/* Display loading animation and countdown before next clip */}
             {isLoadingNextClip && (
                 <div style={{ textAlign: 'center' }}>
                     <div className="loader"></div>
@@ -65,6 +82,7 @@ const VideoPlayer = ({ videoUrl, start, end, clips,selectedClip, onSelect, isLoa
                 </div>
             )}
 
+            {/* HTML5 video element with full control */}
             <video
                 ref={videoRef}
                 src={videoUrl}
@@ -76,7 +94,7 @@ const VideoPlayer = ({ videoUrl, start, end, clips,selectedClip, onSelect, isLoa
                 }}
             />
 
-            {/* Marcadores visuales */}
+            {/* Display markers only when playing full video */}
             {isFullVideo && (
                 <div className="timeline-markers">
                     {clips.slice(1).map((clip, i) => {
@@ -95,7 +113,6 @@ const VideoPlayer = ({ videoUrl, start, end, clips,selectedClip, onSelect, isLoa
             )}
         </div>
     );
-
 };
 
 export default VideoPlayer;

@@ -1,29 +1,34 @@
+/* General reset and font styling */
 body {
   margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f2f2f2;
+  background-color: #f2f2f2; /* Light gray background for the whole page */
 }
 
+/* Main app container styling */
 .App {
   max-width: 800px;
-  margin: 2rem auto;
+  margin: 2rem auto; /* Center horizontally */
   background: white;
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Soft shadow for depth */
 }
 
+/* Header styles */
 h1, h3 {
   color: #333;
 }
 
+/* Clip form layout and spacing */
 form {
   margin-top: 2rem;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 10px; /* Space between input fields */
 }
 
+/* Input field styling */
 input {
   padding: 10px;
   font-size: 16px;
@@ -31,9 +36,10 @@ input {
   border: 1px solid #ccc;
 }
 
+/* Primary button styling */
 button {
   padding: 8px 16px;
-  background-color: #007bff;
+  background-color: #007bff; /* Bootstrap blue */
   color: white;
   border: none;
   border-radius: 5px;
@@ -46,11 +52,13 @@ button:hover {
   background-color: #0056b3;
 }
 
+/* Unordered list reset */
 ul {
   list-style: none;
   padding: 0;
 }
 
+/* Individual clip styling */
 li {
   background: #fafafa;
   margin-bottom: 8px;
@@ -61,11 +69,13 @@ li {
   align-items: center;
 }
 
+/* Make clip name clickable and responsive */
 li strong {
   flex: 1;
   cursor: pointer;
 }
 
+/* Loader spinner for transition between clips */
 .loader {
   border: 8px solid #f3f3f3;
   border-top: 8px solid #007bff;
@@ -76,10 +86,13 @@ li strong {
   animation: spin 1s linear infinite;
 }
 
+/* Spinner animation keyframes */
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+/* Responsive layout for smaller devices */
 @media (max-width: 600px) {
   .App {
     margin: 1rem;
@@ -102,11 +115,14 @@ li strong {
   }
 }
 
+/* Responsive and styled video player */
 video {
   width: 100%;
   height: auto;
   border-radius: 8px;
 }
+
+/* Container for visual clip markers on the timeline */
 .timeline-markers {
   position: relative;
   height: 6px;
@@ -115,6 +131,7 @@ video {
   width: 100%;
 }
 
+/* Individual timeline marker for each clip */
 .marker {
   position: absolute;
   top: 0;
@@ -123,6 +140,8 @@ video {
   background-color: red;
   cursor: pointer;
 }
+
+/* Fixed button that stays visible at the bottom center of the screen */
 .footer-button {
   position: fixed;
   bottom: 20px;
