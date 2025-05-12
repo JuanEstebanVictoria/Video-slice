@@ -25,6 +25,43 @@ const VideoPlayer = ({
     const [duration, setDuration] = useState(0); // Full video duration
     const isFullVideo = selectedClip.start === 0 && selectedClip.end >= duration - 0.5;
 
+    const previewRef = useRef(null);
+    const progressBarRef = useRef(null);
+    const [hoverTime, setHoverTime] = useState(null);
+    const [previewStyle, setPreviewStyle] = useState({ display: "none" });
+
+    const handleMouseMove = (e) => {
+        const bar = progressBarRef.current;
+        const rect = bar.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const percentage = x / rect.width;
+        const time = percentage * duration;
+
+        const preview = previewRef.current;
+        if (preview && !isNaN(time)) {
+            preview.currentTime = time;
+            setHoverTime(time);
+
+            const left = Math.min(Math.max(x - 60, 0), rect.width - 120);
+            setPreviewStyle({
+                display: "block",
+                position: "absolute",
+                bottom: "60px",
+                left: `${left}px`,
+                width: "120px",
+                height: "67px",
+                pointerEvents: "none",
+                zIndex: 10,
+                border: "2px solid white",
+            });
+        }
+    };
+
+    const handleMouseLeave = () => {
+        setPreviewStyle({ display: "none" });
+        setHoverTime(null);
+    };
+
     useEffect(() => {
         const video = videoRef.current;
         if (!video) return;
@@ -93,6 +130,37 @@ const VideoPlayer = ({
                     borderRadius: '8px'
                 }}
             />
+            {/* invisible bar */}
+            <div
+                ref={progressBarRef}
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
+                style={{
+                    position: "absolute",
+                    bottom: 0,
+                    left: 0,
+                    height: "40px",
+                    width: "100%",
+                    cursor: "pointer",
+                    zIndex: 5
+                }}
+            />
+
+            {/* dynamic miniature */}
+            <div style={previewStyle}>
+                <video
+                    ref={previewRef}
+                    src={videoUrl}
+                    muted
+                    width="120"
+                    height="67"
+                    style={{ borderRadius: "4px" }}
+                />
+                <div style={{ textAlign: "center", fontSize: "12px", color: "white" }}>
+                    {hoverTime !== null &&
+                        `${Math.floor(hoverTime / 60)}:${String(Math.floor(hoverTime % 60)).padStart(2, "0")}`}
+                </div>
+            </div>
 
             {/* Display markers only when playing full video */}
             {isFullVideo && (
