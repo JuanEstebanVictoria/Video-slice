@@ -1,0 +1,18 @@
+{
+  "clips": [
+    {
+      "id": 1,
+      "name": "Clip de prueba",
+      "start": 0,
+      "end": 10,
+      "tags": ["intro"]
+    },
+    {
+      "id": 2,
+      "name": "Otro clip",
+      "start": 15,
+      "end": 30,
+      "tags": ["resumen"]
+    }
+  ]
+}

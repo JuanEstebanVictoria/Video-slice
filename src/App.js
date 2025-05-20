@@ -49,22 +49,16 @@ function App() {
 
     // Delete clip and fallback to full video if deleted one is active
     const handleDeleteClip = (index) => {
-        const newClips = clips.filter((_, i) => i !== index);
-        setClips(newClips);
-        if (selectedClip === clips[index]) {
-            setSelectedClip(newClips[0]);
-        }
+        const update = [...clips];
+        update.splice(index, 1);
+        setClips(update);
     };
 
     // Edit a clip and update selected one if necessary
     const handleEditClip = (index, updateClip) => {
-        const newClips = clips.map((clip, i) =>
-            (i === index ? updateClip : clip));
-        setClips(newClips);
-
-        if (selectedClip === clips[index]) {
-            setSelectedClip(updateClip);
-        }
+        const update = [...clips];
+        update[index] = {...update[index], ...updateClip};
+        setClips(update);
     };
 
     // Reset to initial state (only full video)
@@ -129,12 +123,10 @@ function App() {
                 style={{ marginBottom: '1rem', padding: '0.5rem', width: '100%' }}
             />
 
-            {/* List of clips (filtered), editable */}
+            {/* List of clips , editable */}
+            <ClipForm />
             <ClipList
-                clips={filteredClips}
-                onSelect={setSelectedClip}
-                onDelete={handleDeleteClip}
-                onEdit={handleEditClip}
+                onSelect={(clip) => console.log("Selected:", clip)}
                 editable={true}
             />
 
